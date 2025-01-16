@@ -38,10 +38,10 @@ export class Product extends BaseEntity {
     @Column('datetime')
     updated_at: Date;
 
-    // @Column('uuid')
-    // category_id: string;
+    @Column('uuid')
+    category_id: string;
 
     @ManyToOne(() => Category)
     @JoinColumn({ name: 'category_id' })
-    category_id: Category;
+    category: Category;
 }
