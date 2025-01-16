@@ -8,6 +8,8 @@ import { Product } from './products/entities/product.entity';
 import { UsersModule } from './users/users.module';
 import { User } from './users/entities/user.entity';
 import { ConfigModule } from '@nestjs/config';
+import { CategoriesModule } from './categories/categories.module';
+import { Category } from './categories/entities/category.entity';
 
 
 @Module({
@@ -20,11 +22,12 @@ import { ConfigModule } from '@nestjs/config';
       username: 'root',
       password: process.env.MYSQL_ROOT_PASSWORD || 'root',
       database: process.env.MYSQL_DATABASE || 'shoes-db',
-      entities: [Product, User],
+      entities: [Product, User, Category],
       synchronize: true, 
     }),
     ProductsModule,
     UsersModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

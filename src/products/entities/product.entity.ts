@@ -1,3 +1,4 @@
+import { Category } from "src/categories/entities/category.entity";
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('products')
@@ -5,7 +6,7 @@ export class Product extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string
 
-    @Column({ length: 200 })
+    @Column({ type: 'nvarchar', length: 200 })
     name: string
 
     @Column('text')
@@ -16,10 +17,10 @@ export class Product extends BaseEntity {
 
     @Column()
     image_url: string;
-    @Column({ length: 200 })
+    @Column({ type: 'nvarchar', length: 200 })
     size: string;
 
-    @Column({ length: 200 }) 
+    @Column({ type: 'nvarchar', length: 200 }) 
     color: string;
 
     @Column('int')
@@ -28,7 +29,7 @@ export class Product extends BaseEntity {
     @Column('float')
     ratings_number: number;
 
-    @Column({ length: 200 })
+    @Column({ type: 'nvarchar', length: 200 })
     code: string;
 
     @Column('datetime')
@@ -37,10 +38,10 @@ export class Product extends BaseEntity {
     @Column('datetime')
     updated_at: Date;
 
-    @Column()
-    category_id: number;
+    @Column('uuid')
+    category_id: string;
 
-    // @ManyToOne(() => Category)
-    // @JoinColumn({ name: 'category_id' })
-    // category: Category;
+    @ManyToOne(() => Category)
+    @JoinColumn({ name: 'category_id' })
+    category: Category;
 }
