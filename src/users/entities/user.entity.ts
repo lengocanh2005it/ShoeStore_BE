@@ -31,10 +31,10 @@ export class User extends BaseEntity {
     })
     role: UserRole;
 
-    @CreateDateColumn()
-    created_at: Date;
+    @CreateDateColumn({ type: 'timestamp' })
+    readonly created_at: Date;
 
-    @UpdateDateColumn()
-    updated_at: Date;
+    @UpdateDateColumn({ type: 'timestamp' })
+    readonly updated_at: Date;
 }
 
