@@ -16,14 +16,14 @@ export class User extends BaseEntity {
   @Column()
   readonly email: string;
 
-  @Column()
-  readonly password: string;
+  @Column({ nullable: true })
+  readonly password?: string;
 
   @Column()
   readonly name: string;
 
-  @Column()
-  readonly phone_number: string;
+  @Column({ nullable: true })
+  readonly phone_number?: string;
 
   @Column({
     type: 'enum',
