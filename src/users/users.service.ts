@@ -21,7 +21,7 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     const { email } = createUserDto;
-
+    console.log("Check >>> createUserDto = ", createUserDto)
     const isHasExistedEmail = await this.userRepository.countBy({ email });
 
     if (isHasExistedEmail)

@@ -1,9 +1,11 @@
+import { Order } from 'src/orders/entities/order.entity';
 import { UserRole } from 'src/users/enums/users.enum';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -37,4 +39,7 @@ export class User extends BaseEntity {
 
   @UpdateDateColumn({ type: 'timestamp' })
   readonly updated_at: Date;
+
+  @OneToMany(() => Order, order => order.user)
+  readonly orders: Order[];
 }
