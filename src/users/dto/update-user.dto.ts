@@ -7,7 +7,7 @@ export class UpdateUserDto {
 
   @IsString()
   @IsNotEmpty()
-  readonly full_name!: string;
+  readonly name!: string;
 
   @IsString()
   @IsNotEmpty()
