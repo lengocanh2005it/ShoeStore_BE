@@ -1,40 +1,40 @@
-import { IsEmail } from "class-validator";
-import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn,  } from "typeorm";
-
-export enum UserRole {
-    ADMIN = 'admin',
-    USER = 'user'
-}
+import { UserRole } from 'src/users/enums/users.enum';
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('users')
 export class User extends BaseEntity {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  readonly id: string;
 
-    @Column({ type: 'nvarchar', length: 200 })
-    @IsEmail()
-    email: string;
+  @Column()
+  readonly email: string;
 
-    @Column({ type: 'nvarchar', length: 200 })
-    password: string;
+  @Column()
+  readonly password: string;
 
-    @Column({ type: 'nvarchar', length: 200 })
-    name: string;
+  @Column()
+  readonly name: string;
 
-    @Column({ type: 'nvarchar', length: 50 })
-    phone_number: string;
+  @Column()
+  readonly phone_number: string;
 
-    @Column({
-        type: 'enum',
-        enum: UserRole,
-        default: UserRole.USER
-    })
-    role: UserRole;
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.USER,
+  })
+  readonly role: UserRole;
 
-    @CreateDateColumn()
-    created_at: Date;
+  @CreateDateColumn({ type: 'timestamp' })
+  readonly created_at: Date;
 
-    @UpdateDateColumn()
-    updated_at: Date;
+  @UpdateDateColumn({ type: 'timestamp' })
+  readonly updated_at: Date;
 }
-
