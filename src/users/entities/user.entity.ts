@@ -32,9 +32,9 @@ export class User extends BaseEntity {
   })
   readonly role: UserRole;
 
-    @CreateDateColumn({ type: 'timestamp' })
-    readonly created_at: Date;
+  @CreateDateColumn({ type: 'timestamp' })
+  readonly created_at: Date;
 
-    @UpdateDateColumn({ type: 'timestamp' })
-    readonly updated_at: Date;
+  @UpdateDateColumn({ type: 'timestamp' })
+  readonly updated_at: Date;
 }

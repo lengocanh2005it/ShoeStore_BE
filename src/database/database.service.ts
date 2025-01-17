@@ -11,7 +11,7 @@ export class DatabaseService {
     this.dataSource = new DataSource(dataSourceOptions);
   }
 
-  getDataSourceOptions(): DataSourceOptions {
+  getDataSourceOptions(): DataSourceOptions { 
     return {  
       type: 'mysql',
       host: this.configService.get<string>('DB_HOST'),
