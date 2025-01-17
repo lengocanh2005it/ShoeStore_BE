@@ -7,25 +7,25 @@ import { User } from './entities/user.entity';
 export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
-    try {
-      // Create new user instance
-      const user = new User();
-      user.email = createUserDto.email;
-      user.password = createUserDto.password;
-      user.name = createUserDto.name;
-      user.phone_number = createUserDto.phone_number;
-      user.role = createUserDto.role;
+    // try {
+    //   // Create new user instance
+    //   const user = new User();
+    //   user.email = createUserDto.email;
+    //   user.password = createUserDto.password;
+    //   user.name = createUserDto.name;
+    //   user.phone_number = createUserDto.phone_number;
+    //   user.role = createUserDto.role;
       
-      // Save to database
-      await user.save();
+    //   // Save to database
+    //   await user.save();
 
-      console.log('>>> check user: ', user);
+    //   console.log('>>> check user: ', user);
       
-      // Return created user
-      return user;
-    } catch (error) {
-      throw new Error('Could not create user: ' + error.message);
-    }
+    //   // Return created user
+    //   return user;
+    // } catch (error) {
+    //   throw new Error('Could not create user: ' + error.message);
+    // }
   }
 
   findAll() {

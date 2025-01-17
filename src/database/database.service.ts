@@ -12,7 +12,7 @@ export class DatabaseService {
   }
 
   getDataSourceOptions(): DataSourceOptions {
-    return {
+    return {  
       type: 'mysql',
       host: this.configService.get<string>('DB_HOST'),
       port: this.configService.get<number>('DB_PORT'),
