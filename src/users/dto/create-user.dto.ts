@@ -14,6 +14,6 @@ export class CreateUserDto {
   readonly name!: string;
 
   @IsString()
-  @IsNotEmpty() 
+  @IsNotEmpty()
   readonly phone_number!: string;
 }

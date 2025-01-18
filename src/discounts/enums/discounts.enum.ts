@@ -4,4 +4,3 @@ export enum discountStatus {
   PENDING = 'pending',
   USED = 'used',
 }
-  

@@ -1,38 +1,34 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { CategoriesService } from 'src/categories/categories.service';
+import { DataSource, Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
-import { Repository } from 'typeorm';
-import { CategoriesService } from 'src/categories/categories.service';
 
 @Injectable()
 export class ProductsService {
   constructor(
-      @InjectRepository(Product) private readonly productRepository: Repository<Product>,
-      private readonly categoriesService: CategoriesService,
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>,
+    @InjectDataSource() private readonly dataSource: DataSource,
+    private readonly categoriesService: CategoriesService,
   ) {}
 
   async create(createProductDto: CreateProductDto) {
-    try {
-        const category = await this.categoriesService.findOne(createProductDto.category_id);
-        
-        if (!category) {
-            throw new BadRequestException('Category not found');
-        }
+    const { category_id, ...res } = createProductDto;
 
-        const product = this.productRepository.create({
-            ...createProductDto,
-            category_id: category.id,
-            created_at: new Date(),
-            updated_at: new Date()
-        });
+    const product = this.productRepository.create(res);
 
-        return await this.productRepository.save(product);
-    } catch (error) {
-        console.error('Error creating product:', error);
-        throw new BadRequestException(`Failed to create product: ${error.message}`);
-    }
+    await this.productRepository.save(product);
+
+    await this.dataSource
+      .createQueryBuilder()
+      .relation(Product, 'category')
+      .of(product.id)
+      .set(category_id);
+
+    return product;
   }
 
   findAll() {
