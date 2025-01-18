@@ -8,19 +8,20 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class DiscountsService {
   constructor(
-    @InjectRepository(Discount) private readonly discountRepository: Repository<Discount>
+    @InjectRepository(Discount)
+    private readonly discountRepository: Repository<Discount>,
   ) {}
-  
+
   async create(createDiscountDto: CreateDiscountDto) {
     try {
-      const discount = await this.discountRepository.create(createDiscountDto)
-      
-      return await this.discountRepository.save(discount)
-      return 'This action adds a new discount';
-    }
-    catch(error) {
+      const discount = this.discountRepository.create(createDiscountDto);
+
+      return await this.discountRepository.save(discount);
+    } catch (error) {
       console.error('Error creating product:', error);
-      throw new BadRequestException(`Failed to create product: ${error.message}`);
+      throw new BadRequestException(
+        `Failed to create product: ${error.message}`,
+      );
     }
   }
 

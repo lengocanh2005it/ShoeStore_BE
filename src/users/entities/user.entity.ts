@@ -34,12 +34,14 @@ export class User extends BaseEntity {
   })
   readonly role: UserRole;
 
+  @OneToMany(() => Order, (order) => order.user, {
+    cascade: true,
+  })
+  readonly orders: Order[];
+
   @CreateDateColumn({ type: 'timestamp' })
-  readonly created_at: Date;
+  readonly createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
-  readonly updated_at: Date;
-
-  @OneToMany(() => Order, order => order.user)
-  readonly orders: Order[];
+  readonly updatedAt: Date;
 }
