@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDiscountDto } from './dto/create-discount.dto';
 import { UpdateDiscountDto } from './dto/update-discount.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -29,8 +29,16 @@ export class DiscountsService {
     return `This action returns all discounts`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} discount`;
+  async findOne(id: string): Promise<Discount> {
+    const discount = await this.discountRepository.findOne({
+      where: { id },
+    });
+
+    if (!discount) {
+      throw new NotFoundException(`Discount with ID ${id} not found`);
+    }
+
+    return discount;
   }
 
   update(id: number, updateDiscountDto: UpdateDiscountDto) {
