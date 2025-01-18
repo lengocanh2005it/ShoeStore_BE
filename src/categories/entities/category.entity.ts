@@ -1,13 +1,17 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Product } from 'src/products/entities/product.entity';
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('categories')
 export class Category extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  readonly id?: string;
 
-  @Column({ type: 'nvarchar' })
-  name: string;
+  @Column({ length: 200 })
+  readonly name?: string;
 
-  @Column({ type: 'nvarchar' })
-  description: string;
+  @Column('text')
+  readonly description?: string;
+
+  @OneToMany(() => Product, (product) => product.category)
+  readonly products: Product[];
 }

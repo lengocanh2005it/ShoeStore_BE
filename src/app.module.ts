@@ -19,6 +19,10 @@ import { HttpExceptionFilter } from 'src/utils/http-exception.filter';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseService } from 'src/database/database.service';
 import { UploadsModule } from './uploads/uploads.module';
+import { DiscountsModule } from './discounts/discounts.module';
+import { PaymentsModule } from './payments/payments.module';
+import { OrdersModule } from './orders/orders.module';
+import { OrdersDetailsModule } from './orders_details/orders_details.module';
 
 @Module({
   imports: [
@@ -36,6 +40,10 @@ import { UploadsModule } from './uploads/uploads.module';
     DatabaseModule,
     AuthModule,
     UploadsModule,
+    DiscountsModule,
+    PaymentsModule,
+    OrdersModule,
+    OrdersDetailsModule,
   ],
   controllers: [AppController],
   providers: [

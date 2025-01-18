@@ -1,44 +1,52 @@
 import { Category } from "src/categories/entities/category.entity";
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { OrdersDetail } from "src/orders_details/entities/orders_detail.entity";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('products')
 export class Product extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
-    id: string
+    readonly id?: string
 
-    @Column({ type: 'nvarchar', length: 200 })
-    name: string
+    @Column({ length: 200 })
+    readonly name?: string
 
     @Column('text')
-    description: string;
+    readonly description?: string;
 
     @Column('decimal', { precision: 10, scale: 2 })
-    price: number;
+    readonly price?: number;
+
+    @Column({ type: 'simple-array' })
+    readonly size?: number[];
 
     @Column()
-    image_url: string;
-    @Column({ type: 'nvarchar', length: 200 })
-    size: string;
+    readonly image_url?: string;
 
-    @Column({ type: 'nvarchar', length: 200 }) 
-    color: string;
+    @Column({ length: 200 }) 
+    readonly color?: string;
 
     @Column('int')
-    stock_quantity: number;
+    readonly stock_quantity?: number;
 
     @Column('float')
-    ratings_number: number;
+    readonly ratings_number?: number;
 
-    @Column({ type: 'nvarchar', length: 200 })
-    code: string;
+    @Column({ length: 200 })
+    readonly code?: string; 
 
-    @Column('datetime')
-    created_at: Date;
+    @CreateDateColumn({ type: 'timestamp' })
+    readonly created_at?: Date;
 
-    @Column('datetime')
-    updated_at: Date;
+    @UpdateDateColumn({ type: 'timestamp' })
+    readonly updated_at?: Date;
 
-    @ManyToOne(() => Category)
-    @JoinColumn({ name: 'category_id', referencedColumnName: 'id' })
-    category: Category;
+    @Column({ name: 'category_id' })
+    category_id: string;
+
+    @ManyToOne(() => Category, (category) => category.products)
+    @JoinColumn({ name: 'category_id' })
+    readonly category?: Category;
+
+    @OneToMany(() => OrdersDetail, (orderDetail) => orderDetail.product)
+    readonly orderDetails?: OrdersDetail[];
 }
