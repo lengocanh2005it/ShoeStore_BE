@@ -27,7 +27,7 @@ export class DiscountsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.discountsService.findOne(+id);
+    return this.discountsService.findOne(id);
   }
 
   @Patch(':id')

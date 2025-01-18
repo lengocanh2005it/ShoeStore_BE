@@ -1,4 +1,6 @@
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -18,27 +20,27 @@ export class OrdersDetail {
   @Column({
     type: 'int',
   })
-  readonly quantity: number;
+  quantity: number;
 
   @Column()
-  readonly size: string;
+  size: number;
 
   @Column()
-  readonly color: string;
+  color: string;
 
   @Column({
     type: 'decimal',
     precision: 10,
     scale: 2,
   })
-  readonly unit_price: number;
+  unit_price: number;
 
   @Column({
     type: 'decimal',
     precision: 10,
     scale: 2,
   })
-  readonly total_price: number;
+  total_price: number;
 
   @ManyToOne(() => Order, (order) => order.orderDetails, {
     onDelete: 'CASCADE',
@@ -52,11 +54,19 @@ export class OrdersDetail {
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'product_id' })
-  readonly product: Product;
+  product: Product;
 
   @CreateDateColumn({ type: 'timestamp' })
   readonly createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
   readonly updatedAt: Date;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  calculateTotalPrice() {
+    if (this.quantity && this.unit_price) {
+      this.total_price = this.quantity * this.unit_price;
+    }
+  }
 }

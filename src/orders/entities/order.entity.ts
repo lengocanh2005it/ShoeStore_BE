@@ -25,7 +25,7 @@ export class Order {
     precision: 10,
     scale: 2,
   })
-  readonly total_price: number;
+  readonly total_price: number; 
 
   @Column({
     type: 'enum',
