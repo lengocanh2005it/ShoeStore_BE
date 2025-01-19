@@ -17,7 +17,7 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 export class UploadsController {
   constructor(private readonly uploadsService: UploadsService) {}
 
-  @Post()
+  @Post('users')
   @UseInterceptors(FileInterceptor('file'))
   @UseGuards(JwtAuthGuard, RoleAuthGuard)
   @Roles(Role.ADMIN)

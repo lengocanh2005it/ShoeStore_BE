@@ -20,20 +20,20 @@ export class OrdersDetail {
   @Column({
     type: 'int',
   })
-  quantity: number;
+  readonly quantity: number;
 
   @Column()
-  size: number;
+  readonly size: number;
 
   @Column()
-  color: string;
+  readonly color: string;
 
   @Column({
     type: 'decimal',
     precision: 10,
     scale: 2,
   })
-  unit_price: number;
+  readonly unit_price: number;
 
   @Column({
     type: 'decimal',
@@ -54,7 +54,7 @@ export class OrdersDetail {
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'product_id' })
-  product: Product;
+  readonly product: Product;
 
   @CreateDateColumn({ type: 'timestamp' })
   readonly createdAt: Date;

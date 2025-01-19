@@ -12,22 +12,19 @@ export class CategoriesService {
     private readonly categoryRepository: Repository<Category>,
   ) {}
 
-  async create(createCategoryDto: CreateCategoryDto) {
-    try {
-      const category = await this.categoryRepository.create(createCategoryDto);
-      return await this.categoryRepository.save(category);
-    } catch (error) {
-      throw new Error(`Failed to create category: ${error.message}`);
-    }
+  async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
+    const category = this.categoryRepository.create(createCategoryDto);
+    return await this.categoryRepository.save(category);
   }
 
-  findAll() {
-    return `This action returns all categories`;
+  async findAll(): Promise<Category[]> {
+    return await this.categoryRepository.find({ relations: ['products'] });
   }
 
   async findOne(id: string): Promise<Category> {
     const category = await this.categoryRepository.findOne({
       where: { id },
+      relations: ['products'],
     });
 
     if (!category) {
@@ -37,11 +34,22 @@ export class CategoriesService {
     return category;
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  async update(
+    id: string,
+    updateCategoryDto: UpdateCategoryDto,
+  ): Promise<Category> {
+    const category = await this.categoryRepository.findOneBy({ id });
+    if (!category) throw new NotFoundException('Category Not Found.');
+    await this.categoryRepository.update({ id }, updateCategoryDto);
+    return await this.categoryRepository.findOne({
+      where: { id },
+      relations: ['products'],
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: string): Promise<void> {
+    const category = await this.categoryRepository.findOneBy({ id });
+    if (!category) throw new NotFoundException('Category Not Found.');
+    await this.categoryRepository.delete(category.id);
   }
 }

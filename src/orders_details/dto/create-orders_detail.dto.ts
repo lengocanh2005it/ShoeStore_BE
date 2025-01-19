@@ -1,30 +1,28 @@
-import { IsNotEmpty, IsNumber, IsString, IsUUID, IsDecimal, IsPositive, isNumber } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsPositive,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
 export class CreateOrdersDetailDto {
   @IsNotEmpty()
   @IsPositive()
   @IsNumber()
-  quantity: number;
+  readonly quantity: number;
 
   @IsNotEmpty()
   @IsPositive()
   @IsNumber()
-  size: number;
+  readonly size: number;
 
   @IsNotEmpty()
   @IsString()
-  color: string;
-
-  @IsNotEmpty()
-  @IsPositive()
-  @IsNumber()
-  unit_price: number;
+  readonly color: string;
 
   @IsNotEmpty()
   @IsUUID()
-  order_id: string;
-
   @IsNotEmpty()
-  @IsUUID()
-  product_id: string;
+  readonly product_id: string;
 }

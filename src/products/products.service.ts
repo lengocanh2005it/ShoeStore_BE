@@ -3,7 +3,6 @@ import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { CategoriesService } from 'src/categories/categories.service';
 import { DataSource, Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
 
 @Injectable()
@@ -19,8 +18,9 @@ export class ProductsService {
     const { category_id, ...res } = createProductDto;
 
     const category = await this.categoriesService.findOne(category_id);
+
     if (!category) {
-      throw new NotFoundException('Category not found');
+      throw new NotFoundException('Category Not Found.');
     }
 
     const product = this.productRepository.create(res);
@@ -32,23 +32,32 @@ export class ProductsService {
       .relation(Product, 'category')
       .of(product.id)
       .set(category_id);
-    
+
     return product;
   }
 
-  findAll() {
-    return `This action returns all products`;
+  async findAll(): Promise<Product[]> {
+    return await this.productRepository.find({
+      relations: ['category'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id: string): Promise<Product> {
+    const product = await this.productRepository.findOne({
+      where: {
+        id,
+      },
+      relations: ['category'],
+    });
+
+    if (!product) throw new NotFoundException('Product Not Found.');
+
+    return product;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: string): Promise<void> {
+    const product = await this.productRepository.findOneBy({ id });
+    if (!product) throw new NotFoundException('Product Not Found.');
+    await this.productRepository.delete(product.id);
   }
 }
