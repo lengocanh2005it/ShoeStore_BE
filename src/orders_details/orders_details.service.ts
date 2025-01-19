@@ -1,26 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Product } from 'src/products/entities/product.entity';
+import { DataSource, Repository } from 'typeorm';
 import { CreateOrdersDetailDto } from './dto/create-orders_detail.dto';
-import { UpdateOrdersDetailDto } from './dto/update-orders_detail.dto';
+import { OrdersDetail } from './entities/orders_details.entity';
 
 @Injectable()
 export class OrdersDetailsService {
-  create(createOrdersDetailDto: CreateOrdersDetailDto) {
-    return 'This action adds a new ordersDetail';
-  }
+  constructor(
+    @InjectRepository(OrdersDetail)
+    private readonly oderDetailRepository: Repository<OrdersDetail>,
+    private readonly dataSource: DataSource,
+  ) {}
 
-  findAll() {
-    return `This action returns all ordersDetails`;
-  }
+  async create(
+    createOrdersDetailDto: CreateOrdersDetailDto,
+    orderId: string,
+  ): Promise<void> {
+    const { product_id, ...orderDetailData } = createOrdersDetailDto;
 
-  findOne(id: number) {
-    return `This action returns a #${id} ordersDetail`;
-  }
+    const product = await this.dataSource
+      .getRepository(Product)
+      .findOne({ where: { id: product_id } });
 
-  update(id: number, updateOrdersDetailDto: UpdateOrdersDetailDto) {
-    return `This action updates a #${id} ordersDetail`;
-  }
+    if (!product) throw new NotFoundException('Product Not Found.');
 
-  remove(id: number) {
-    return `This action removes a #${id} ordersDetail`;
+    const orderDetail = this.oderDetailRepository.create({
+      ...orderDetailData,
+      unit_price: product.price,
+    });
+
+    await this.oderDetailRepository.save(orderDetail);
+
+    await this.dataSource
+      .createQueryBuilder()
+      .relation(OrdersDetail, 'product')
+      .of(orderDetail.id)
+      .set(product_id);
+
+    await this.dataSource
+      .createQueryBuilder()
+      .relation(OrdersDetail, 'order')
+      .of(orderDetail.id)
+      .set(orderId);
   }
 }

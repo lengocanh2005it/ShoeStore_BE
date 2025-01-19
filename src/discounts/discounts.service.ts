@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateDiscountDto } from './dto/create-discount.dto';
 import { UpdateDiscountDto } from './dto/update-discount.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -25,19 +29,39 @@ export class DiscountsService {
     }
   }
 
-  findAll() {
-    return `This action returns all discounts`;
+  async findAll() {
+    return await this.discountRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} discount`;
+  async findOne(id: string): Promise<Discount> {
+    const discount = await this.discountRepository.findOne({
+      where: { id },
+    });
+
+    if (!discount) throw new NotFoundException('Discount Not Found.');
+
+    return discount;
   }
 
-  update(id: number, updateDiscountDto: UpdateDiscountDto) {
-    return `This action updates a #${id} discount`;
+  async update(
+    id: string,
+    updateDiscountDto: UpdateDiscountDto,
+  ): Promise<Discount> {
+    const discount = await this.discountRepository.findOneBy({ id });
+    if (!discount) throw new NotFoundException('Discount Not Found.');
+    await this.discountRepository.update({ id }, updateDiscountDto);
+    return await this.discountRepository.findOneBy({ id });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} discount`;
+  async remove(id: string): Promise<void> {
+    const discount = await this.discountRepository.findOneBy({ id });
+    if (!discount) throw new NotFoundException('Discount Not Found.');
+    await this.discountRepository.delete(discount.id);
+  }
+
+  async findDiscountByCode(code: string): Promise<Discount> {
+    const discount = await this.discountRepository.findOneBy({ code });
+    if (!discount) throw new NotFoundException('Discount Not Found.');
+    return discount;
   }
 }

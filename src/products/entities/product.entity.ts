@@ -49,7 +49,7 @@ export class Product extends BaseEntity {
   })
   readonly ratings_number: number;
 
-  @Column()
+  @Column({ default: null })
   readonly code: string;
 
   @ManyToOne(() => Category, (category) => category.products, {

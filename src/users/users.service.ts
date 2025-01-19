@@ -19,7 +19,7 @@ export class UsersService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const { email } = createUserDto;
     console.log('Check >>> createUserDto = ', createUserDto);
     const isHasExistedEmail = await this.userRepository.countBy({ email });
