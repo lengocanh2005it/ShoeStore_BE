@@ -27,6 +27,9 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   readonly phone_number?: string;
 
+  @Column()
+  readonly avatar_url?: string;
+
   @Column({
     type: 'enum',
     enum: UserRole,
