@@ -1,27 +1,21 @@
-import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID } from "class-validator";
-import { PaymentMethod } from "../enums/paymentMethod.enum";
-import { PaymentStatus } from "../enums/paymentStatus.enum";
+import { IsEnum, IsNotEmpty, IsNumber, IsPositive } from 'class-validator';
+import { PaymentMethod } from '../enums/paymentMethod.enum';
+import { PaymentStatus } from '../enums/paymentStatus.enum';
 
 export class CreatePaymentDto {
-    @IsEnum(PaymentStatus)
-    @IsNotEmpty()
-    readonly status: PaymentStatus;
+  @IsEnum(PaymentStatus)
+  @IsNotEmpty()
+  readonly status: PaymentStatus;
 
-    @IsEnum(PaymentMethod)
-    @IsNotEmpty()
-    readonly method: PaymentMethod;
-    
-    @IsNotEmpty()
-    readonly payment_date: Date;
+  @IsEnum(PaymentMethod)
+  @IsNotEmpty()
+  readonly method: PaymentMethod;
 
-    @IsNumber()
-    @IsNotEmpty()
-    @IsPositive()
-    readonly amount: number;
+  @IsNotEmpty()
+  readonly payment_date: Date;
 
-    @IsString()
-    @IsUUID()
-    @IsOptional()
-    @IsNotEmpty()
-    readonly order_id: string
+  @IsNumber()
+  @IsNotEmpty()
+  @IsPositive()
+  readonly amount: number;
 }
