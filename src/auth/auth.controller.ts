@@ -5,6 +5,7 @@ import {
   Post,
   Req,
   Res,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -12,6 +13,10 @@ import { Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 import { LoginDto } from 'src/auth/dto/auth.dto';
 import { GoogleAuthGuard } from 'src/auth/guards/google.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { RoleAuthGuard } from 'src/auth/guards/role.guard';
+import { Roles } from 'src/auth/utils/role.decorator';
+import { Role } from 'src/auth/utils/role.enum';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
@@ -25,13 +30,43 @@ export class AuthController {
   ) {}
 
   @Post('login')
-  async login(@Body() loginDto: LoginDto): Promise<any> {
-    return await this.authService.handleLogin(loginDto);
+  async login(@Body() loginDto: LoginDto, @Req() req: any): Promise<any> {
+    const response = await this.authService.handleLogin(loginDto);
+
+    const { userId, accessToken, refreshToken } = response;
+
+    req.session.user = {
+      userId,
+      accessToken,
+      refreshToken,
+    };
+
+    return {
+      accessToken,
+      refreshToken,
+    };
   }
 
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto): Promise<User> {
     return await this.usersService.create(createUserDto);
+  }
+
+  @Get('profile')
+  @UseGuards(JwtAuthGuard, RoleAuthGuard)
+  @Roles(Role.ADMIN, Role.USER)
+  async getProfile(@Req() request: any): Promise<any> {
+    if (!request.session.user || !request.session.user.userId) {
+      throw new UnauthorizedException('User Not Authenticated.');
+    }
+
+    const userId = request.session.user.userId as string;
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, createdAt, updatedAt, ...res } =
+      await this.usersService.findOne(userId);
+
+    return res;
   }
 
   @Post('refresh-token')
