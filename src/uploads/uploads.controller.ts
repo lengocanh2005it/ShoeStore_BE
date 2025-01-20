@@ -32,7 +32,7 @@ export class UploadsController {
   @Post('file')
   @UseInterceptors(FileInterceptor('file'))
   @UseGuards(JwtAuthGuard, RoleAuthGuard)
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.USER)
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
   ): Promise<{ url: string }> {
