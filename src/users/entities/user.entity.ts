@@ -27,7 +27,10 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   readonly phone_number?: string;
 
-  @Column()
+  @Column({
+    default:
+      'https://png.pngtree.com/png-vector/20240529/ourmid/pngtree-black-and-white-avatar-icon-with-a-black-head-vector-png-image_6958961.png',
+  })
   readonly avatar_url?: string;
 
   @Column({
