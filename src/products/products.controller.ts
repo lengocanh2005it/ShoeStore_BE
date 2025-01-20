@@ -27,15 +27,11 @@ export class ProductsController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard, RoleAuthGuard)
-  @Roles(Role.ADMIN, Role.USER)
   async findAll(): Promise<Product[]> {
     return await this.productsService.findAll();
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard, RoleAuthGuard)
-  @Roles(Role.USER, Role.ADMIN)
   async findOne(@Param('id') id: string) {
     return await this.productsService.findOne(id);
   }
