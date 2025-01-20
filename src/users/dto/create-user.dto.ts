@@ -16,8 +16,4 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   readonly phone_number!: string;
-
-  @IsString()
-  @IsNotEmpty()
-  readonly avatar_url!: string;
 }
