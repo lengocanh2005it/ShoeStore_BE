@@ -49,7 +49,11 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto): Promise<User> {
-    return await this.usersService.create(createUserDto);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, createdAt, updatedAt, ...res } =
+      await this.usersService.create(createUserDto);
+
+    return res as User;
   }
 
   @Get('profile')

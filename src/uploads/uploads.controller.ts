@@ -28,4 +28,14 @@ export class UploadsController {
       jsonData as CreateUserDto[],
     );
   }
+
+  @Post('file')
+  @UseInterceptors(FileInterceptor('file'))
+  @UseGuards(JwtAuthGuard, RoleAuthGuard)
+  @Roles(Role.ADMIN)
+  async uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<{ url: string }> {
+    return await this.uploadsService.uploadFile(file);
+  }
 }
