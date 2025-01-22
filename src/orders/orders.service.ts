@@ -83,21 +83,49 @@ export class OrdersService {
     });
   }
 
-  async findAll(): Promise<Order[]> {
-    return await this.orderRepository.find({
-      relations: ['user', 'discount', 'payment', 'orderDetails'],
+  async findAll(): Promise<any> {
+    const orders = await this.orderRepository.find({
+      relations: [
+        'user',
+        'discount',
+        'payment',
+        'orderDetails',
+        'orderDetails.product',
+      ],
+    });
+
+    return orders.map((order) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, createdAt, updatedAt, orders, ...res } = order.user;
+
+      return {
+        ...order,
+        user: res,
+      };
     });
   }
 
-  async findOne(id: string): Promise<Order> {
+  async findOne(id: string): Promise<any> {
     const order = await this.orderRepository.findOne({
       where: { id },
-      relations: ['user', 'discount', 'payment', 'orderDetails'],
+      relations: [
+        'user',
+        'discount',
+        'payment',
+        'orderDetails',
+        'orderDetails.product',
+      ],
     });
 
     if (!order) throw new NotFoundException('Order Not Found.');
 
-    return order;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, createdAt, updatedAt, orders, ...res } = order.user;
+
+    return {
+      ...order,
+      user: res,
+    };
   }
 
   async update(id: string, updateOrderDto: UpdateOrderDto): Promise<Order> {
