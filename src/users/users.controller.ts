@@ -14,10 +14,10 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { RoleAuthGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/utils/role.decorator';
 import { Role } from 'src/auth/utils/role.enum';
+import { UsersInterceptor } from 'src/users/users.interceptor';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
-import { UsersInterceptor } from 'src/users/users.interceptor';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -26,8 +26,6 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  // @UseGuards(JwtAuthGuard, RoleAuthGuard)
-  // @Roles(Role.ADMIN, Role.USER)
   async create(@Body() createUserDto: CreateUserDto) {
     return await this.usersService.create(createUserDto);
   }
