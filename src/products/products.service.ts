@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { CategoriesService } from 'src/categories/categories.service';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, Like, Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { Product } from './entities/product.entity';
 import { UpdateProductDto } from 'src/products/dto/update-product.dto';
@@ -37,8 +37,15 @@ export class ProductsService {
     return product;
   }
 
-  async findAll(): Promise<Product[]> {
-    return await this.productRepository.find({
+  async findAll(queries?: Record<string, string>): Promise<Product[]> {
+    const where: Record<string, any> = {};
+
+    if (queries?.name) {
+      where.name = Like(`%${queries.name}%`);
+    }
+
+    return this.productRepository.find({
+      where,
       relations: ['category'],
     });
   }

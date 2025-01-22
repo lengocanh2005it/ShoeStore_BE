@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
@@ -29,8 +30,8 @@ export class ProductsController {
   }
 
   @Get()
-  async findAll(): Promise<Product[]> {
-    return await this.productsService.findAll();
+  async findAll(@Query() queries: Record<string, string>): Promise<Product[]> {
+    return await this.productsService.findAll(queries);
   }
 
   @Get(':id')
