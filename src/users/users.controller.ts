@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -40,8 +41,11 @@ export class UsersController {
   @Get(':id')
   @UseGuards(JwtAuthGuard, RoleAuthGuard)
   @Roles(Role.USER, Role.ADMIN)
-  async findOne(@Param('id') id: string) {
-    return await this.usersService.findOne(id);
+  async findOne(
+    @Param('id') id: string,
+    @Query() queries: Record<string, string>,
+  ) {
+    return await this.usersService.findOne(id, queries);
   }
 
   @Patch(':id')
