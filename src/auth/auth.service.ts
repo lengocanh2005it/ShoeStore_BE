@@ -53,7 +53,7 @@ export class AuthService {
     let user = null as User;
 
     if (userId) {
-      user = await this.usersService.findOne(userId);
+      user = (await this.usersService.findOne(userId)) as User;
     }
 
     if (!user) throw new UnauthorizedException('Unauthenticated.');
