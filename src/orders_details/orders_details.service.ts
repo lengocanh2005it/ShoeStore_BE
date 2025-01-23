@@ -4,6 +4,7 @@ import { Product } from 'src/products/entities/product.entity';
 import { DataSource, Repository } from 'typeorm';
 import { CreateOrdersDetailDto } from './dto/create-orders_detail.dto';
 import { OrdersDetail } from './entities/orders_details.entity';
+import { ProductsService } from 'src/products/products.service';
 
 @Injectable()
 export class OrdersDetailsService {
@@ -11,6 +12,7 @@ export class OrdersDetailsService {
     @InjectRepository(OrdersDetail)
     private readonly oderDetailRepository: Repository<OrdersDetail>,
     private readonly dataSource: DataSource,
+    private readonly productsService: ProductsService,
   ) {}
 
   async create(
@@ -31,6 +33,11 @@ export class OrdersDetailsService {
     });
 
     await this.oderDetailRepository.save(orderDetail);
+
+    await this.productsService.updateStockQuantityOfProduct(
+      product_id,
+      orderDetailData.quantity,
+    );
 
     await this.dataSource
       .createQueryBuilder()

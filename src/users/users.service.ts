@@ -50,7 +50,13 @@ export class UsersService {
     if (queries && queries.orders === 'true') {
       user = await this.userRepository.findOne({
         where: { id },
-        relations: ['orders'],
+        relations: [
+          'orders',
+          'orders.orderDetails',
+          'orders.discount',
+          'orders.payment',
+          'orders.orderDetails.product',
+        ],
       });
 
       return user.orders;
