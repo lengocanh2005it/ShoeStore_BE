@@ -13,6 +13,7 @@ import { encodePassword } from 'src/utils/bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LoginDto } from 'src/auth/dto/auth.dto';
 import * as bcrypt from 'bcrypt';
+import { UserRole } from 'src/users/enums/users.enum';
 
 @Injectable()
 export class UsersService implements OnModuleInit {
@@ -145,22 +146,35 @@ export class UsersService implements OnModuleInit {
   }
 
   private initAccounts = async (): Promise<void> => {
-    const newUser = this.userRepository.create({
+    const existedDefaultUserAccount = await this.userRepository.findOneBy({
       email: 'user@gmail.com',
-      password: encodePassword('123456'),
-      name: `Default User`,
-      phone_number: '123456789',
     });
 
-    await this.userRepository.save(newUser);
-
-    const newAdminUser = this.userRepository.create({
+    const existedDefaultAdminAccount = await this.userRepository.findOneBy({
       email: 'admin@gmail.com',
-      password: encodePassword('123456'),
-      name: `I'm Admin`,
-      phone_number: '123456789',
     });
 
-    await this.userRepository.save(newAdminUser);
+    if (!existedDefaultUserAccount) {
+      const newUser = this.userRepository.create({
+        email: 'user@gmail.com',
+        password: encodePassword('123456'),
+        name: `Default User`,
+        phone_number: '123456789',
+      });
+
+      await this.userRepository.save(newUser);
+    }
+
+    if (!existedDefaultAdminAccount) {
+      const newAdminUser = this.userRepository.create({
+        email: 'admin@gmail.com',
+        password: encodePassword('123456'),
+        name: `I'm Admin`,
+        phone_number: '123456789',
+        role: UserRole.ADMIN,
+      });
+
+      await this.userRepository.save(newAdminUser);
+    }
   };
 }
