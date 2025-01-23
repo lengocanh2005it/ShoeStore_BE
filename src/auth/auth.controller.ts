@@ -68,7 +68,7 @@ export class AuthController {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, createdAt, updatedAt, ...res } =
-      await this.usersService.findOne(userId);
+      (await this.usersService.findOne(userId)) as User;
 
     return res;
   }
