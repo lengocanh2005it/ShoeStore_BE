@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  OnModuleInit,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -14,10 +15,14 @@ import { LoginDto } from 'src/auth/dto/auth.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class UsersService {
+export class UsersService implements OnModuleInit {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
+
+  async onModuleInit() {
+    await this.initAccounts();
+  }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const { email } = createUserDto;
@@ -138,4 +143,24 @@ export class UsersService {
       errorAccounts,
     };
   }
+
+  private initAccounts = async (): Promise<void> => {
+    const newUser = this.userRepository.create({
+      email: 'user@gmail.com',
+      password: encodePassword('123456'),
+      name: `Default User`,
+      phone_number: '123456789',
+    });
+
+    await this.userRepository.save(newUser);
+
+    const newAdminUser = this.userRepository.create({
+      email: 'admin@gmail.com',
+      password: encodePassword('123456'),
+      name: `I'm Admin`,
+      phone_number: '123456789',
+    });
+
+    await this.userRepository.save(newAdminUser);
+  };
 }
