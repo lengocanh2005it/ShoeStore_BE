@@ -27,6 +27,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     profile: Profile,
   ) {
     const { displayName, emails } = profile;
+
     return await this.authService.handleLoginByGoogle({
       displayName,
       emails,

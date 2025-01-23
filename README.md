@@ -22,3 +22,5 @@
 8. Finally, combine it with the instructions in the README.md file from the Frontend repository to test the API of the shoe store website!
 
 Note: Wishing you an enjoyable experience with our team's shoe store website!
+
+![alt text](image.png)
